@@ -39,4 +39,7 @@ const batchPublishers = async ids => {
     }
 };
 
-module.exports = () => new DataLoader(batchPublishers, {maxBatchSize: 2}); // batch size will depend on external service
+module.exports = {
+    publisherDataLoader: () => new DataLoader(batchPublishers, { maxBatchSize: 2 }), // batch size will depend on external service,
+    publishersMockData,
+}

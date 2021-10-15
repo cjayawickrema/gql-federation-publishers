@@ -1,6 +1,6 @@
 const {ApolloServer, gql} = require('apollo-server');
 const {buildFederatedSchema} = require('@apollo/federation');
-const publisherLoader = require('./publisherLoader');
+const {publisherDataLoader, publishersMockData} = require('./publisherLoader');
 
 const typeDefs = gql`
 
@@ -20,10 +20,8 @@ const resolvers = {
         publishers: () => publishersMockData,
     },
     Publisher: {
-        __resolveReference(reference, {publisherLoader}) {
-            // return publishersMockData.find(e => reference.id === e.id)
-            console.log('__resolveReference');
-            return publisherLoader.load(reference.id);
+        __resolveReference(publisher, {publisherLoader}) {
+            return publisherLoader.load(publisher.id);
         }
     }
 };
@@ -32,7 +30,7 @@ const server = new ApolloServer({
     schema: buildFederatedSchema([{typeDefs, resolvers}]),
     debug: true,
     context: () => ({
-        publisherLoader: publisherLoader()
+        publisherLoader: publisherDataLoader()
     }),
 });
 
